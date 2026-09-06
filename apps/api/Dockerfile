@@ -26,7 +26,10 @@ COPY packages packages
 
 RUN pnpm --filter @bookstore/api exec prisma generate
 RUN pnpm --filter @bookstore/api build
-RUN pnpm --filter @bookstore/api deploy --legacy --prod /opt/bookstore/api
+# Prisma CLI is a development dependency whose Studio package declares optional
+# React peers. They are irrelevant to the API runtime, so keep strict peer checks
+# for normal installs while allowing the production-only deploy projection.
+RUN pnpm --config.strict-peer-dependencies=false --filter @bookstore/api deploy --legacy --prod /opt/bookstore/api
 
 FROM node:24.18.0-bookworm-slim AS runtime
 
