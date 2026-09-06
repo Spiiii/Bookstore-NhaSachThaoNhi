@@ -1,0 +1,135 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 24.18.0
+  PNPM_VERSION: 10.34.5
+
+jobs:
+  quality:
+    name: Quality and application tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm --filter @bookstore/api exec prisma generate
+      - name: Verify generated contracts
+        run: pnpm contracts:check
+      - name: Verify package boundaries
+        run: pnpm test:contract-boundaries
+      - name: Lint workspace
+        run: pnpm lint
+      - name: Type-check workspace
+        run: pnpm typecheck
+      - name: Test API units
+        run: pnpm --filter @bookstore/api test:unit
+      - name: Test API authentication and operations
+        run: pnpm --filter @bookstore/api test:admin
+      - name: Test API uploads
+        run: pnpm --filter @bookstore/api test:uploads
+      - name: Test API content review
+        run: pnpm --filter @bookstore/api test:content-review
+      - name: Test API OpenAPI export
+        run: pnpm --filter @bookstore/api test:openapi
+      - name: Test Web content policy
+        run: pnpm --filter @bookstore/web test:content
+      - name: Build API
+        run: pnpm --filter @bookstore/api build
+      - name: Build Web
+        run: pnpm --filter @bookstore/web build
+
+  postgres-invariants:
+    name: PostgreSQL invariants
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm --filter @bookstore/api exec prisma generate
+      - name: Start disposable PostgreSQL
+        shell: bash
+        run: |
+          test_secret=$(openssl rand -hex 32)
+          echo "::add-mask::$test_secret"
+          echo "TEST_POSTGRES_PASSWORD=$test_secret" >> "$GITHUB_ENV"
+          echo "TEST_POSTGRES_ADMIN_URL=postgresql://postgres:$test_secret@127.0.0.1:55432/postgres" >> "$GITHUB_ENV"
+          TEST_POSTGRES_PASSWORD="$test_secret" docker compose -p bookstore-ci -f deploy/compose.test.yaml up -d --wait
+      - name: Test admin and product database invariants
+        run: pnpm --filter @bookstore/api test:admin:postgres
+      - name: Test content database invariants
+        run: pnpm --filter @bookstore/api test:content:postgres
+      - name: Stop disposable PostgreSQL
+        if: always()
+        shell: bash
+        run: |
+          if [ -n "${TEST_POSTGRES_PASSWORD:-}" ]; then
+            docker compose -p bookstore-ci -f deploy/compose.test.yaml down --volumes
+          fi
+
+  containers:
+    name: Validate container images
+    needs: [quality, postgres-invariants]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: false
+          tags: bookstore-api:ci
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+      - name: Build Web image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: false
+          tags: bookstore-web:ci
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web

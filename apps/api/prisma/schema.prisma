@@ -1,0 +1,192 @@
+// Approved Database Design R2 / Repository Blueprint B3.
+// Required SQL CHECK constraints and database privileges are tracked in
+// docs/database/prisma-layer.md. Do not deploy using db push alone.
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  moduleFormat    = "cjs"
+  previewFeatures = ["partialIndexes"]
+}
+
+datasource db {
+  provider     = "postgresql"
+  relationMode = "foreignKeys"
+}
+
+enum Role {
+  ADMIN
+}
+
+enum Marketplace {
+  SHOPEE
+  TIKTOK_SHOP
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id                String    @id @default(uuid()) @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  singletonKey      Int       @unique @default(1) @map("singleton_key") @db.SmallInt
+  email             String    @unique @db.VarChar(254)
+  passwordHash      String    @map("password_hash") @db.VarChar(255)
+  displayName       String    @map("display_name") @db.VarChar(120)
+  role              Role      @default(ADMIN)
+  authVersion       Int       @default(0) @map("auth_version")
+  sessionId         String?   @unique @map("session_id") @db.Uuid
+  refreshTokenHash  String?   @map("refresh_token_hash") @db.VarChar(64)
+  refreshGeneration Int       @default(0) @map("refresh_generation")
+  sessionExpiresAt  DateTime? @map("session_expires_at") @db.Timestamptz(3)
+  lastLoginAt       DateTime? @map("last_login_at") @db.Timestamptz(3)
+  news              News[]    @relation("NewsAuthor")
+
+  @@map("users")
+}
+
+model Category {
+  id          String     @id @default(uuid()) @db.Uuid
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  name        String     @db.VarChar(160)
+  slug        String     @unique @db.VarChar(180)
+  description String?    @db.Text
+  parentId    String?    @map("parent_id") @db.Uuid
+  sortOrder   Int        @default(0) @map("sort_order")
+  isActive    Boolean    @default(true) @map("is_active")
+  parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  children    Category[] @relation("CategoryTree")
+  products    Product[]
+
+  @@index([parentId, sortOrder, id])
+  @@map("categories")
+}
+
+model Brand {
+  id          String    @id @default(uuid()) @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  name        String    @db.VarChar(160)
+  slug        String    @unique @db.VarChar(180)
+  description String?   @db.Text
+  logoKey     String?   @map("logo_key") @db.VarChar(512)
+  websiteUrl  String?   @map("website_url") @db.VarChar(2048)
+  isActive    Boolean   @default(true) @map("is_active")
+  products    Product[]
+
+  @@map("brands")
+}
+
+model Product {
+  id               String                   @id @default(uuid()) @db.Uuid
+  createdAt        DateTime                 @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  sku              String                   @unique @db.VarChar(64)
+  name             String                   @db.VarChar(200)
+  slug             String                   @unique @db.VarChar(180)
+  summary          String?                  @db.VarChar(500)
+  description      String?                  @db.Text
+  categoryId       String?                  @map("category_id") @db.Uuid
+  brandId          String?                  @map("brand_id") @db.Uuid
+  referencePrice   Decimal?                 @map("reference_price") @db.Decimal(14, 0)
+  currency         String                   @default("VND") @db.Char(3)
+  isActive         Boolean                  @default(false) @map("is_active")
+  category         Category?                @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  brand            Brand?                   @relation(fields: [brandId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  images           ProductImage[]
+  attributes       ProductAttribute[]
+  marketplaceLinks ProductMarketplaceLink[]
+
+  @@index([isActive, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([categoryId, isActive, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([brandId, isActive, createdAt(sort: Desc), id(sort: Desc)])
+  @@map("products")
+}
+
+model ProductImage {
+  id         String   @id @default(uuid()) @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  productId  String   @map("product_id") @db.Uuid
+  storageKey String   @map("storage_key") @db.VarChar(512)
+  altText    String?  @map("alt_text") @db.VarChar(250)
+  sortOrder  Int      @default(0) @map("sort_order")
+  isPrimary  Boolean  @default(false) @map("is_primary")
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+
+  @@unique([productId, storageKey])
+  @@unique([productId], map: "product_images_one_primary_per_product", where: raw("(is_primary = true)"))
+  @@index([productId, sortOrder, id])
+  @@map("product_images")
+}
+
+model ProductAttribute {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  productId String   @map("product_id") @db.Uuid
+  key       String   @db.VarChar(80)
+  label     String   @db.VarChar(120)
+  value     String   @db.VarChar(1000)
+  sortOrder Int      @default(0) @map("sort_order")
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+
+  @@unique([productId, key])
+  @@index([productId, sortOrder, id])
+  @@map("product_attributes")
+}
+
+model ProductMarketplaceLink {
+  id          String      @id @default(uuid()) @db.Uuid
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  productId   String      @map("product_id") @db.Uuid
+  marketplace Marketplace
+  url         String      @db.VarChar(2048)
+  isActive    Boolean     @default(true) @map("is_active")
+  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+
+  @@unique([productId, marketplace])
+  @@map("product_marketplace_links")
+}
+
+model News {
+  id          String     @id @default(uuid()) @db.Uuid
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  title       String     @db.VarChar(200)
+  slug        String     @unique @db.VarChar(180)
+  excerpt     String?    @db.VarChar(500)
+  content     String     @db.Text
+  coverKey    String?    @map("cover_key") @db.VarChar(512)
+  status      NewsStatus @default(DRAFT)
+  publishedAt DateTime?  @map("published_at") @db.Timestamptz(3)
+  authorId    String     @map("author_id") @db.Uuid
+  author      User       @relation("NewsAuthor", fields: [authorId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([status, publishedAt(sort: Desc), id(sort: Desc)])
+  @@index([authorId])
+  @@map("news")
+}
+
+model Banner {
+  id        String    @id @default(uuid()) @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  title     String    @db.VarChar(160)
+  imageKey  String    @map("image_key") @db.VarChar(512)
+  altText   String    @map("alt_text") @db.VarChar(250)
+  targetUrl String?   @map("target_url") @db.VarChar(2048)
+  placement String    @db.VarChar(64)
+  sortOrder Int       @default(0) @map("sort_order")
+  isActive  Boolean   @default(false) @map("is_active")
+  startsAt  DateTime? @map("starts_at") @db.Timestamptz(3)
+  endsAt    DateTime? @map("ends_at") @db.Timestamptz(3)
+
+  @@index([placement, isActive, sortOrder, id])
+  @@map("banners")
+}

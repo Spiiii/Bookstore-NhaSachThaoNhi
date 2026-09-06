@@ -1,0 +1,36 @@
+{
+  "name": "bookstore",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": ">=24.18.0 <25",
+    "pnpm": "10.34.5"
+  },
+  "scripts": {
+    "lint": "pnpm lint:root && pnpm -r --if-present lint",
+    "lint:root": "eslint --config packages/eslint-config/base.mjs scripts prettier.config.mjs --max-warnings 0",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "typecheck:operations": "pnpm --filter @bookstore/api typecheck:operations",
+    "typecheck:tooling": "pnpm --filter @bookstore/api typecheck:tooling",
+    "build:api": "pnpm --filter @bookstore/api build",
+    "build:web": "pnpm --filter @bookstore/web build",
+    "build:operations": "pnpm --filter @bookstore/api build:operations",
+    "build:tooling": "pnpm --filter @bookstore/api build:tooling",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "contracts:generate": "node scripts/generate-contracts.mjs",
+    "contracts:check": "node scripts/check-contracts.mjs",
+    "contracts:boundaries": "node scripts/check-contract-boundaries.mjs",
+    "test:contract-boundaries": "node --test scripts/tests/contract-boundaries.test.mjs",
+    "test:unit": "pnpm --filter @bookstore/api test:unit",
+    "test:e2e": "pnpm --filter @bookstore/web test:e2e"
+  },
+  "devDependencies": {
+    "@bookstore/eslint-config": "workspace:*",
+    "eslint": "9.39.4",
+    "openapi-typescript": "7.13.0",
+    "prettier": "3.9.6",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,151 @@
+name: Publish container images
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Container image tag
+        required: true
+        type: string
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+
+jobs:
+  verify:
+    name: Verify release
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.5
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.18.0
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm --filter @bookstore/api exec prisma generate
+      - name: Verify contracts and boundaries
+        run: |
+          pnpm contracts:check
+          pnpm test:contract-boundaries
+      - name: Verify source and application tests
+        run: |
+          pnpm lint
+          pnpm typecheck
+          pnpm --filter @bookstore/api test:unit
+          pnpm --filter @bookstore/api test:admin
+          pnpm --filter @bookstore/api test:uploads
+          pnpm --filter @bookstore/api test:content-review
+          pnpm --filter @bookstore/api test:openapi
+          pnpm --filter @bookstore/web test:content
+          pnpm --filter @bookstore/api build
+          pnpm --filter @bookstore/web build
+      - name: Start disposable PostgreSQL
+        shell: bash
+        run: |
+          test_secret=$(openssl rand -hex 32)
+          echo "::add-mask::$test_secret"
+          echo "TEST_POSTGRES_PASSWORD=$test_secret" >> "$GITHUB_ENV"
+          echo "TEST_POSTGRES_ADMIN_URL=postgresql://postgres:$test_secret@127.0.0.1:55432/postgres" >> "$GITHUB_ENV"
+          TEST_POSTGRES_PASSWORD="$test_secret" docker compose -p bookstore-release -f deploy/compose.test.yaml up -d --wait
+      - name: Verify PostgreSQL invariants
+        run: |
+          pnpm --filter @bookstore/api test:admin:postgres
+          pnpm --filter @bookstore/api test:content:postgres
+      - name: Stop disposable PostgreSQL
+        if: always()
+        shell: bash
+        run: |
+          if [ -n "${TEST_POSTGRES_PASSWORD:-}" ]; then
+            docker compose -p bookstore-release -f deploy/compose.test.yaml down --volumes
+          fi
+
+  publish:
+    name: Publish API and Web images
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set image tag
+        id: release
+        shell: bash
+        env:
+          MANUAL_TAG: ${{ inputs.image_tag }}
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            tag="${MANUAL_TAG}"
+          else
+            tag="${GITHUB_REF_NAME}"
+          fi
+          if [[ ! "$tag" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$ ]]; then
+            echo "Invalid container tag." >&2
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Normalize image owner
+        id: owner
+        shell: bash
+        env:
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+        run: echo "value=${REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+      - name: Build and publish API image
+        id: api
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: true
+          tags: ghcr.io/${{ steps.owner.outputs.value }}/bookstore-api:${{ steps.release.outputs.tag }}
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+      - name: Attest API image
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/${{ steps.owner.outputs.value }}/bookstore-api
+          subject-digest: ${{ steps.api.outputs.digest }}
+          push-to-registry: true
+      - name: Build and publish Web image
+        id: web
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: true
+          tags: ghcr.io/${{ steps.owner.outputs.value }}/bookstore-web:${{ steps.release.outputs.tag }}
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+      - name: Attest Web image
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/${{ steps.owner.outputs.value }}/bookstore-web
+          subject-digest: ${{ steps.web.outputs.digest }}
+          push-to-registry: true

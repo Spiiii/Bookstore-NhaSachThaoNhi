@@ -1,0 +1,3 @@
+packages/contracts/openapi/bookstore.openapi.json text eol=lf
+packages/contracts/src/generated/schema.ts text eol=lf
+packages/contracts/src/index.ts text eol=lf

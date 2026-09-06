@@ -1,0 +1,14 @@
+{
+  "extends": "@bookstore/typescript-config/nestjs.json",
+  "compilerOptions": { "rootDir": ".", "outDir": "./dist-tooling" },
+  "include": ["tooling/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dist-operations",
+    "dist-tooling",
+    "**/*.spec.ts",
+    "**/tests/**",
+    "test"
+  ]
+}

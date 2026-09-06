@@ -1,0 +1,25 @@
+name: bookstore-local
+
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${LOCAL_POSTGRES_PASSWORD:?Inject a local development password}
+      POSTGRES_DB: bookstore
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - bookstore-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d bookstore']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  bookstore-postgres-data:

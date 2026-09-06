@@ -1,0 +1,15 @@
+export const xssFixtures = [
+  '<script>globalThis.pwned=true</script>',
+  '<img src=x onerror="globalThis.pwned=true">',
+  '[click](javascript:alert%281%29)',
+  '[click](java&#x73;cript:alert%281%29)',
+  '[click](data:text/html;base64,PHNjcmlwdD4=)',
+  '<svg><script>alert(1)</script></svg>',
+  '<iframe src="https://evil.test"></iframe>',
+  '![tracking](https://evil.test/pixel)',
+  '<a id="location" href="javascript:alert(1)">x</a>',
+  '[null-byte](java\u0000script:alert%281%29)',
+  '[mixed-case](JaVaScRiPt:alert%281%29)',
+  '[file](file:///etc/passwd)',
+  '[blob](blob:https://example.test/id)',
+];

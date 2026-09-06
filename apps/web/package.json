@@ -1,0 +1,51 @@
+{
+  "name": "@bookstore/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "start": "next start",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "next build",
+    "test:content": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:auth": "playwright test tests/e2e/auth.spec.ts",
+    "test:e2e:products": "playwright test tests/e2e/products.spec.ts",
+    "test:e2e:news": "playwright test tests/e2e/news.spec.ts",
+    "test:e2e:auth-coordination": "playwright test tests/e2e/auth.spec.ts tests/e2e/refresh-coordination.spec.ts tests/e2e/session-replacement.spec.ts"
+  },
+  "dependencies": {
+    "@bookstore/contracts": "workspace:*",
+    "@bookstore/ui": "workspace:*",
+    "@hookform/resolvers": "5.9.1",
+    "@tanstack/react-query": "5.102.8",
+    "axios": "1.20.0",
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hook-form": "7.87.0",
+    "rehype-sanitize": "6.0.0",
+    "rehype-stringify": "10.0.1",
+    "remark-parse": "11.0.0",
+    "remark-rehype": "11.1.2",
+    "server-only": "0.0.1",
+    "unified": "11.0.5",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@bookstore/eslint-config": "workspace:*",
+    "@bookstore/typescript-config": "workspace:*",
+    "@playwright/test": "1.62.1",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "eslint": "9.39.4",
+    "postcss": "8.5.26",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

@@ -1,0 +1,3551 @@
+{
+  "components": {
+    "schemas": {
+      "AccessTokenDto": {
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "tokenType": {
+            "enum": ["Bearer"],
+            "type": "string"
+          }
+        },
+        "required": ["accessToken", "tokenType"],
+        "type": "object"
+      },
+      "AdminProfileDto": {
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "email": {
+            "format": "email",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "role": {
+            "enum": ["ADMIN"],
+            "type": "string"
+          }
+        },
+        "required": ["id", "email", "displayName", "role"],
+        "type": "object"
+      },
+      "AttachImageDto": {
+        "properties": {
+          "altText": {
+            "maxLength": 250,
+            "nullable": true,
+            "type": "string"
+          },
+          "isPrimary": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "storageKey": {
+            "description": "Existing immutable Storage object key produced by upload",
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": ["storageKey"],
+        "type": "object"
+      },
+      "AttributeDto": {
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": ["key", "label", "value"],
+        "type": "object"
+      },
+      "BannerPageDto": {
+        "properties": {
+          "hasMore": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/BannerResponseDto"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          }
+        },
+        "required": ["items", "page", "limit", "hasMore"],
+        "type": "object"
+      },
+      "BannerResponseDto": {
+        "properties": {
+          "altText": {
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          },
+          "endAt": {
+            "description": "Admin only; exclusive",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "imageKey": {
+            "description": "Admin only",
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "isActive": {
+            "description": "Admin only",
+            "type": "boolean"
+          },
+          "placement": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "startAt": {
+            "description": "Admin only; inclusive",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "targetUrl": {
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "description": "Admin only",
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": ["id", "imageUrl", "altText", "targetUrl", "placement", "sortOrder"],
+        "type": "object"
+      },
+      "BrandPageDto": {
+        "properties": {
+          "hasMore": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/BrandResponseDto"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          }
+        },
+        "required": ["items", "page", "limit", "hasMore"],
+        "type": "object"
+      },
+      "BrandResponseDto": {
+        "properties": {
+          "createdAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isActive": {
+            "description": "Admin only",
+            "type": "boolean"
+          },
+          "logoKey": {
+            "description": "Admin only",
+            "nullable": true,
+            "type": "string"
+          },
+          "logoUrl": {
+            "description": "API-relative logo route; resolve with the API mount prefix",
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          },
+          "websiteUrl": {
+            "format": "uri",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "slug", "description", "websiteUrl", "logoUrl"],
+        "type": "object"
+      },
+      "CategoryPageDto": {
+        "properties": {
+          "hasMore": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CategoryResponseDto"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          }
+        },
+        "required": ["items", "page", "limit", "hasMore"],
+        "type": "object"
+      },
+      "CategoryResponseDto": {
+        "properties": {
+          "createdAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isActive": {
+            "description": "Admin only",
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parentId": {
+            "description": "Stored parent, which may be hidden publicly",
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "slug", "description", "parentId", "sortOrder"],
+        "type": "object"
+      },
+      "CategoryTreeNodeDto": {
+        "properties": {
+          "children": {
+            "items": {
+              "$ref": "#/components/schemas/CategoryTreeNodeDto"
+            },
+            "type": "array"
+          },
+          "createdAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isActive": {
+            "description": "Admin only",
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parentId": {
+            "description": "Stored parent, which may be hidden publicly",
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "treeParentId": {
+            "description": "Parent in this visible tree; null means visible root",
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "description",
+          "parentId",
+          "sortOrder",
+          "treeParentId",
+          "children"
+        ],
+        "type": "object"
+      },
+      "ChangePasswordDto": {
+        "properties": {
+          "currentPassword": {
+            "format": "password",
+            "type": "string",
+            "writeOnly": true
+          },
+          "newPassword": {
+            "format": "password",
+            "minLength": 15,
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": ["currentPassword", "newPassword"],
+        "type": "object"
+      },
+      "CreateBannerDto": {
+        "properties": {
+          "altText": {
+            "description": "Empty for decorative images",
+            "maxLength": 250,
+            "type": "string"
+          },
+          "endAt": {
+            "description": "Exclusive end, timezone required; maps to Banner.endsAt",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "imageKey": {
+            "description": "Existing immutable uploaded image",
+            "format": "uuid",
+            "type": "string"
+          },
+          "isActive": {
+            "default": false,
+            "type": "boolean"
+          },
+          "placement": {
+            "description": "Configured placement allowlist",
+            "example": "home-hero",
+            "maxLength": 64,
+            "type": "string"
+          },
+          "sortOrder": {
+            "default": 0,
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "number"
+          },
+          "startAt": {
+            "description": "Inclusive start, timezone required; maps to Banner.startsAt",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "targetUrl": {
+            "description": "Site-root-relative path or HTTPS URL",
+            "maxLength": 2048,
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "description": "Internal label",
+            "maxLength": 160,
+            "type": "string"
+          }
+        },
+        "required": ["title", "imageKey", "altText", "placement"],
+        "type": "object"
+      },
+      "CreateBrandDto": {
+        "properties": {
+          "description": {
+            "description": "Plain text",
+            "nullable": true,
+            "type": "string"
+          },
+          "isActive": {
+            "default": true,
+            "type": "boolean"
+          },
+          "logoKey": {
+            "description": "Existing immutable uploaded logo object",
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 160,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 180,
+            "type": "string"
+          },
+          "websiteUrl": {
+            "format": "uri",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": ["name", "slug"],
+        "type": "object"
+      },
+      "CreateCategoryDto": {
+        "properties": {
+          "description": {
+            "description": "Plain text",
+            "nullable": true,
+            "type": "string"
+          },
+          "isActive": {
+            "default": true,
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 160,
+            "type": "string"
+          },
+          "parentId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 180,
+            "type": "string"
+          },
+          "sortOrder": {
+            "default": 0,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": ["name", "slug"],
+        "type": "object"
+      },
+      "CreateNewsDto": {
+        "properties": {
+          "content": {
+            "description": "Markdown source; never rendered HTML",
+            "maxLength": 100000,
+            "type": "string"
+          },
+          "coverKey": {
+            "description": "Existing immutable uploaded cover object",
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "excerpt": {
+            "description": "Plain text summary and SEO description",
+            "maxLength": 500,
+            "nullable": true,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 180,
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 200,
+            "type": "string"
+          }
+        },
+        "required": ["title", "slug", "content"],
+        "type": "object"
+      },
+      "CreateProductDto": {
+        "properties": {
+          "brandId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "categoryId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "description": {
+            "description": "Markdown; render with the approved safe renderer",
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "referencePrice": {
+            "description": "Integer VND amount, at most 14 digits; null means contact for price",
+            "nullable": true,
+            "type": "string"
+          },
+          "sku": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 180,
+            "type": "string"
+          },
+          "summary": {
+            "maxLength": 500,
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": ["sku", "name", "slug"],
+        "type": "object"
+      },
+      "HealthResponseDto": {
+        "properties": {
+          "status": {
+            "enum": ["ok"],
+            "type": "string"
+          }
+        },
+        "required": ["status"],
+        "type": "object"
+      },
+      "ImageMetadataDto": {
+        "properties": {
+          "altText": {
+            "maxLength": 250,
+            "nullable": true,
+            "type": "string"
+          },
+          "isPrimary": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "LoginDto": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "maxLength": 254,
+            "type": "string"
+          },
+          "password": {
+            "format": "password",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": ["email", "password"],
+        "type": "object"
+      },
+      "MarketplaceButtonResponseDto": {
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "marketplace": {
+            "enum": ["SHOPEE", "TIKTOK_SHOP"],
+            "type": "string"
+          },
+          "message": {
+            "nullable": true,
+            "type": "string"
+          },
+          "url": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": ["marketplace", "url", "available", "message"],
+        "type": "object"
+      },
+      "MarketplaceLinkDto": {
+        "properties": {
+          "isActive": {
+            "type": "boolean"
+          },
+          "url": {
+            "format": "uri",
+            "maxLength": 2048,
+            "type": "string"
+          }
+        },
+        "required": ["url"],
+        "type": "object"
+      },
+      "MarketplaceLinkResponseDto": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "marketplace": {
+            "enum": ["SHOPEE", "TIKTOK_SHOP"],
+            "type": "string"
+          },
+          "productId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "productId", "marketplace", "url", "isActive", "createdAt", "updatedAt"],
+        "type": "object"
+      },
+      "NewsPageDto": {
+        "properties": {
+          "hasMore": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/NewsResponseDto"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          }
+        },
+        "required": ["items", "page", "limit", "hasMore"],
+        "type": "object"
+      },
+      "NewsPublicationDto": {
+        "properties": {
+          "publishedAt": {
+            "description": "PUBLISHED only: explicit time with timezone, or server time when publishing. Future dates schedule visibility.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"],
+            "type": "string"
+          }
+        },
+        "required": ["status"],
+        "type": "object"
+      },
+      "NewsResponseDto": {
+        "properties": {
+          "authorId": {
+            "description": "Admin only",
+            "format": "uuid",
+            "type": "string"
+          },
+          "content": {
+            "description": "Markdown source, detail responses only",
+            "type": "string"
+          },
+          "coverKey": {
+            "description": "Admin only",
+            "nullable": true,
+            "type": "string"
+          },
+          "coverUrl": {
+            "nullable": true,
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          },
+          "excerpt": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "publishedAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "seo": {
+            "$ref": "#/components/schemas/NewsSeoDto"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "status": {
+            "description": "Admin only",
+            "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "slug",
+          "excerpt",
+          "coverUrl",
+          "publishedAt",
+          "updatedAt",
+          "seo"
+        ],
+        "type": "object"
+      },
+      "NewsSeoDto": {
+        "properties": {
+          "canonicalPath": {
+            "description": "Website-relative path; resolve against configured canonical website origin",
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "imageUrl": {
+            "description": "API-relative cover URL; admin preview requires Bearer authentication",
+            "nullable": true,
+            "type": "string"
+          },
+          "noIndex": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "enum": ["article"],
+            "type": "string"
+          }
+        },
+        "required": ["title", "description", "canonicalPath", "imageUrl", "type", "noIndex"],
+        "type": "object"
+      },
+      "ProductAttributeResponseDto": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "key", "label", "value", "sortOrder"],
+        "type": "object"
+      },
+      "ProductImageResponseDto": {
+        "properties": {
+          "altText": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isPrimary": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "storageKey": {
+            "description": "Admin responses only",
+            "type": "string"
+          },
+          "url": {
+            "description": "API-relative URL; apply the configured API mount prefix",
+            "type": "string"
+          }
+        },
+        "required": ["id", "altText", "sortOrder", "isPrimary", "url"],
+        "type": "object"
+      },
+      "ProductPageResponseDto": {
+        "properties": {
+          "hasMore": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ProductResponseDto"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          }
+        },
+        "required": ["items", "page", "limit", "hasMore"],
+        "type": "object"
+      },
+      "ProductResponseDto": {
+        "properties": {
+          "attributes": {
+            "description": "Detail responses only",
+            "items": {
+              "$ref": "#/components/schemas/ProductAttributeResponseDto"
+            },
+            "type": "array"
+          },
+          "brandId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "categoryId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          },
+          "currency": {
+            "enum": ["VND"],
+            "type": "string"
+          },
+          "description": {
+            "description": "Markdown; detail responses only",
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ProductImageResponseDto"
+            },
+            "type": "array"
+          },
+          "isActive": {
+            "description": "Admin only",
+            "type": "boolean"
+          },
+          "marketplaceLinks": {
+            "description": "Admin only; includes inactive links",
+            "items": {
+              "$ref": "#/components/schemas/MarketplaceLinkResponseDto"
+            },
+            "type": "array"
+          },
+          "marketplaces": {
+            "items": {
+              "$ref": "#/components/schemas/MarketplaceButtonResponseDto"
+            },
+            "type": "array"
+          },
+          "name": {
+            "type": "string"
+          },
+          "referencePrice": {
+            "description": "Integer VND string; null means contact for price",
+            "nullable": true,
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "summary": {
+            "nullable": true,
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "Admin only",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "sku",
+          "name",
+          "slug",
+          "summary",
+          "categoryId",
+          "brandId",
+          "referencePrice",
+          "currency",
+          "images",
+          "marketplaces"
+        ],
+        "type": "object"
+      },
+      "PublicationDto": {
+        "properties": {
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": ["isActive"],
+        "type": "object"
+      },
+      "UpdateAttributeDto": {
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateBannerDto": {
+        "properties": {
+          "altText": {
+            "description": "Empty for decorative images",
+            "maxLength": 250,
+            "type": "string"
+          },
+          "endAt": {
+            "description": "Exclusive end, timezone required; maps to Banner.endsAt",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "imageKey": {
+            "description": "Existing immutable uploaded image",
+            "format": "uuid",
+            "type": "string"
+          },
+          "isActive": {
+            "default": false,
+            "type": "boolean"
+          },
+          "placement": {
+            "description": "Configured placement allowlist",
+            "example": "home-hero",
+            "maxLength": 64,
+            "type": "string"
+          },
+          "sortOrder": {
+            "default": 0,
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "number"
+          },
+          "startAt": {
+            "description": "Inclusive start, timezone required; maps to Banner.startsAt",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "targetUrl": {
+            "description": "Site-root-relative path or HTTPS URL",
+            "maxLength": 2048,
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "description": "Internal label",
+            "maxLength": 160,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateBrandDto": {
+        "properties": {
+          "description": {
+            "description": "Plain text",
+            "nullable": true,
+            "type": "string"
+          },
+          "isActive": {
+            "default": true,
+            "type": "boolean"
+          },
+          "logoKey": {
+            "description": "Existing immutable uploaded logo object",
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 160,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 180,
+            "type": "string"
+          },
+          "websiteUrl": {
+            "format": "uri",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateCategoryDto": {
+        "properties": {
+          "description": {
+            "description": "Plain text",
+            "nullable": true,
+            "type": "string"
+          },
+          "isActive": {
+            "default": true,
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 160,
+            "type": "string"
+          },
+          "parentId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 180,
+            "type": "string"
+          },
+          "sortOrder": {
+            "default": 0,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateNewsDto": {
+        "properties": {
+          "content": {
+            "description": "Markdown source; never rendered HTML",
+            "maxLength": 100000,
+            "type": "string"
+          },
+          "coverKey": {
+            "description": "Existing immutable uploaded cover object",
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "excerpt": {
+            "description": "Plain text summary and SEO description",
+            "maxLength": 500,
+            "nullable": true,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 180,
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 200,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateProductDto": {
+        "properties": {
+          "brandId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "categoryId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "description": {
+            "description": "Markdown; render with the approved safe renderer",
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "referencePrice": {
+            "description": "Integer VND amount, at most 14 digits; null means contact for price",
+            "nullable": true,
+            "type": "string"
+          },
+          "sku": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 180,
+            "type": "string"
+          },
+          "summary": {
+            "maxLength": 500,
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UploadResponseDto": {
+        "properties": {
+          "height": {
+            "type": "number"
+          },
+          "mimeType": {
+            "enum": ["image/png", "image/jpeg", "image/webp"],
+            "type": "string"
+          },
+          "size": {
+            "description": "Stored sanitized image size in bytes",
+            "type": "number"
+          },
+          "storageKey": {
+            "description": "Use as storageKey, imageKey, coverKey or logoKey in the owning content API",
+            "format": "uuid",
+            "type": "string"
+          },
+          "width": {
+            "type": "number"
+          }
+        },
+        "required": ["storageKey", "size", "mimeType", "width", "height"],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "__Secure-bookstore-refresh": {
+        "in": "cookie",
+        "name": "__Secure-bookstore-refresh",
+        "type": "apiKey"
+      },
+      "bearer": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "contact": {},
+    "description": "Product catalogue and singleton-admin content APIs.",
+    "title": "Bookstore API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/admin/banners": {
+      "get": {
+        "operationId": "BannersAdminController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "placement",
+            "required": false,
+            "schema": {
+              "example": "home-hero",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isActive",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Internal title substring",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerPageDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-banners"]
+      },
+      "post": {
+        "operationId": "BannersAdminController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBannerDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-banners"]
+      }
+    },
+    "/admin/banners/{id}": {
+      "delete": {
+        "operationId": "BannersAdminController_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-banners"]
+      },
+      "get": {
+        "operationId": "BannersAdminController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-banners"]
+      },
+      "patch": {
+        "operationId": "BannersAdminController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBannerDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-banners"]
+      }
+    },
+    "/admin/banners/{id}/image": {
+      "get": {
+        "operationId": "BannersAdminController_image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-banners"]
+      }
+    },
+    "/admin/brands": {
+      "get": {
+        "operationId": "BrandsAdminController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isActive",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrandPageDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-brands"]
+      },
+      "post": {
+        "operationId": "BrandsAdminController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBrandDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrandResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-brands"]
+      }
+    },
+    "/admin/brands/{id}": {
+      "delete": {
+        "operationId": "BrandsAdminController_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-brands"]
+      },
+      "get": {
+        "operationId": "BrandsAdminController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrandResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-brands"]
+      },
+      "patch": {
+        "operationId": "BrandsAdminController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBrandDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrandResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-brands"]
+      }
+    },
+    "/admin/brands/{id}/logo": {
+      "get": {
+        "operationId": "BrandsAdminController_logo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-brands"]
+      }
+    },
+    "/admin/categories": {
+      "get": {
+        "operationId": "CategoriesAdminController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Stored direct parent ID",
+            "in": "query",
+            "name": "parentId",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isActive",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryPageDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-categories"]
+      },
+      "post": {
+        "operationId": "CategoriesAdminController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-categories"]
+      }
+    },
+    "/admin/categories/tree": {
+      "get": {
+        "operationId": "CategoriesAdminController_tree",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryTreeNodeDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-categories"]
+      }
+    },
+    "/admin/categories/{id}": {
+      "delete": {
+        "operationId": "CategoriesAdminController_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-categories"]
+      },
+      "get": {
+        "operationId": "CategoriesAdminController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-categories"]
+      },
+      "patch": {
+        "operationId": "CategoriesAdminController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-categories"]
+      }
+    },
+    "/admin/news": {
+      "get": {
+        "operationId": "NewsAdminController_list",
+        "parameters": [
+          {
+            "description": "Literal title substring",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsPageDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-news"]
+      },
+      "post": {
+        "operationId": "NewsAdminController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNewsDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-news"]
+      }
+    },
+    "/admin/news/{id}": {
+      "delete": {
+        "operationId": "NewsAdminController_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-news"]
+      },
+      "get": {
+        "operationId": "NewsAdminController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-news"]
+      },
+      "patch": {
+        "operationId": "NewsAdminController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNewsDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-news"]
+      }
+    },
+    "/admin/news/{id}/cover": {
+      "get": {
+        "operationId": "NewsAdminController_cover",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-news"]
+      }
+    },
+    "/admin/news/{id}/publication": {
+      "patch": {
+        "operationId": "NewsAdminController_publication",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsPublicationDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-news"]
+      }
+    },
+    "/admin/products": {
+      "get": {
+        "operationId": "CatalogAdminController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "categoryId",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "brandId",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isActive",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductPageResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      },
+      "post": {
+        "operationId": "CatalogAdminController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      }
+    },
+    "/admin/products/{id}": {
+      "delete": {
+        "operationId": "CatalogAdminController_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      },
+      "get": {
+        "operationId": "CatalogAdminController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      },
+      "patch": {
+        "operationId": "CatalogAdminController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      }
+    },
+    "/admin/products/{id}/attributes": {
+      "post": {
+        "operationId": "CatalogAdminController_addAttribute",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttributeDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      }
+    },
+    "/admin/products/{id}/attributes/{attributeId}": {
+      "delete": {
+        "operationId": "CatalogAdminController_removeAttribute",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "attributeId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      },
+      "patch": {
+        "operationId": "CatalogAdminController_updateAttribute",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "attributeId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAttributeDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      }
+    },
+    "/admin/products/{id}/images": {
+      "post": {
+        "operationId": "CatalogAdminController_attachImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttachImageDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      }
+    },
+    "/admin/products/{id}/images/{imageId}": {
+      "delete": {
+        "operationId": "CatalogAdminController_removeImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      },
+      "patch": {
+        "operationId": "CatalogAdminController_updateImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageMetadataDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      }
+    },
+    "/admin/products/{id}/images/{imageId}/content": {
+      "get": {
+        "operationId": "CatalogAdminController_image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      }
+    },
+    "/admin/products/{id}/marketplace-links/{marketplace}": {
+      "delete": {
+        "operationId": "CatalogAdminController_removeMarketplace",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "marketplace",
+            "required": true,
+            "schema": {
+              "enum": ["SHOPEE", "TIKTOK_SHOP"],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      },
+      "put": {
+        "operationId": "CatalogAdminController_setMarketplace",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "marketplace",
+            "required": true,
+            "schema": {
+              "enum": ["SHOPEE", "TIKTOK_SHOP"],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarketplaceLinkDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      }
+    },
+    "/admin/products/{id}/publication": {
+      "patch": {
+        "operationId": "CatalogAdminController_publish",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicationDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-products"]
+      }
+    },
+    "/admin/uploads": {
+      "post": {
+        "operationId": "UploadsController_upload",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "file": {
+                    "format": "binary",
+                    "type": "string"
+                  }
+                },
+                "required": ["file"],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-uploads"]
+      }
+    },
+    "/auth/change-password": {
+      "post": {
+        "operationId": "AuthController_changePassword",
+        "parameters": [
+          {
+            "description": "An explicitly trusted browser origin",
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "format": "uri",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["auth"]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [
+          {
+            "description": "An explicitly trusted browser origin",
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "format": "uri",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["auth"]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [
+          {
+            "description": "An explicitly trusted browser origin",
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "format": "uri",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "__Secure-bookstore-refresh": []
+          },
+          {
+            "bearer": []
+          },
+          {}
+        ],
+        "summary": "Idempotent logout using refresh cookie or access Bearer token",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminProfileDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["auth"]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [
+          {
+            "description": "An explicitly trusted browser origin",
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "format": "uri",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "__Secure-bookstore-refresh": []
+          }
+        ],
+        "tags": ["auth"]
+      }
+    },
+    "/banners": {
+      "get": {
+        "operationId": "BannersPublicController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "placement",
+            "required": false,
+            "schema": {
+              "example": "home-hero",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerPageDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["banners"]
+      }
+    },
+    "/banners/{id}": {
+      "get": {
+        "operationId": "BannersPublicController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["banners"]
+      }
+    },
+    "/banners/{id}/image": {
+      "get": {
+        "operationId": "BannersPublicController_image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["banners"]
+      }
+    },
+    "/brands": {
+      "get": {
+        "operationId": "BrandsPublicController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrandPageDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["brands"]
+      }
+    },
+    "/brands/by-slug/{slug}": {
+      "get": {
+        "operationId": "BrandsPublicController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrandResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["brands"]
+      }
+    },
+    "/brands/by-slug/{slug}/logo": {
+      "get": {
+        "operationId": "BrandsPublicController_logo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["brands"]
+      }
+    },
+    "/categories": {
+      "get": {
+        "operationId": "CategoriesPublicController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Stored direct parent ID",
+            "in": "query",
+            "name": "parentId",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryPageDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["categories"]
+      }
+    },
+    "/categories/by-slug/{slug}": {
+      "get": {
+        "operationId": "CategoriesPublicController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["categories"]
+      }
+    },
+    "/categories/tree": {
+      "get": {
+        "operationId": "CategoriesPublicController_tree",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryTreeNodeDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["categories"]
+      }
+    },
+    "/health/live": {
+      "get": {
+        "operationId": "HealthController_liveness",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["health"]
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "operationId": "HealthController_readiness",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponseDto"
+                }
+              }
+            },
+            "description": ""
+          },
+          "503": {
+            "description": "Primary database is unavailable."
+          }
+        },
+        "tags": ["health"]
+      }
+    },
+    "/news": {
+      "get": {
+        "operationId": "NewsPublicController_list",
+        "parameters": [
+          {
+            "description": "Literal title substring",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsPageDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["news"]
+      }
+    },
+    "/news/by-slug/{slug}": {
+      "get": {
+        "operationId": "NewsPublicController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["news"]
+      }
+    },
+    "/news/by-slug/{slug}/cover": {
+      "get": {
+        "operationId": "NewsPublicController_cover",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["news"]
+      }
+    },
+    "/products": {
+      "get": {
+        "operationId": "CatalogPublicController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "categoryId",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "brandId",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductPageResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["products"]
+      }
+    },
+    "/products/{slug}": {
+      "get": {
+        "operationId": "CatalogPublicController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["products"]
+      }
+    },
+    "/products/{slug}/images/{imageId}": {
+      "get": {
+        "operationId": "CatalogPublicController_image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": ["products"]
+      }
+    }
+  },
+  "servers": [],
+  "tags": []
+}

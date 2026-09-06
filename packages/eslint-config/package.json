@@ -1,0 +1,31 @@
+{
+  "name": "@bookstore/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./base": "./base.mjs",
+    "./nestjs": "./nestjs.mjs",
+    "./nextjs": "./nextjs.mjs",
+    "./library": "./library.mjs",
+    "./boundaries": "./boundaries.mjs"
+  },
+  "scripts": {
+    "lint": "eslint --config base.mjs . --max-warnings 0"
+  },
+  "peerDependencies": {
+    "eslint": "^9.39.4",
+    "typescript": ">=5.4 <6"
+  },
+  "dependencies": {
+    "@eslint/js": "9.39.4",
+    "eslint-config-next": "16.3.4",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "16.5.0",
+    "typescript-eslint": "8.69.0"
+  },
+  "devDependencies": {
+    "eslint": "9.39.4",
+    "typescript": "5.9.3"
+  }
+}

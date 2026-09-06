@@ -1,0 +1,9 @@
+packages:
+  - apps/*
+  - packages/*
+
+overrides:
+  '@nestjs/platform-express@10.4.22>multer': 2.3.0
+
+# Lifecycle builds remain disabled until a dependency needs an approved build.
+onlyBuiltDependencies: []
