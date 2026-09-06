@@ -28,7 +28,9 @@ ARG NEXT_PUBLIC_API_BASE_URL
 ENV NEXT_PUBLIC_API_BASE_URL="$NEXT_PUBLIC_API_BASE_URL"
 
 RUN pnpm --filter @bookstore/web build
-RUN pnpm --filter @bookstore/web deploy --legacy --prod /opt/bookstore/web
+# The legacy deploy projection inspects the shared workspace lockfile, including
+# optional peers that are not part of the web runtime. Normal installs remain strict.
+RUN pnpm --config.strict-peer-dependencies=false --filter @bookstore/web deploy --legacy --prod /opt/bookstore/web
 
 FROM node:24.18.0-bookworm-slim AS runtime
 
