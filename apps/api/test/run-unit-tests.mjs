@@ -2,7 +2,7 @@ import jest from 'jest';
 import { fileURLToPath } from 'node:url';
 
 const rootDir = fileURLToPath(new URL('..', import.meta.url));
-const modules = ['auth', 'users', 'catalog', 'categories', 'brands', 'news', 'banners', 'health'];
+const modules = ['auth', 'users', 'catalog', 'categories', 'brands', 'news', 'banners', 'health', 'dashboard'];
 const { results } = await jest.runCLI(
   {
     runInBand: true,

@@ -8,6 +8,7 @@ import { NewsModule } from './modules/news/news.module';
 import { BannersModule } from './modules/banners/banners.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
 import { HealthModule } from './modules/health/health.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 /** Single runtime controller registry, reused by offline Swagger tooling. */
 @Module({
@@ -21,6 +22,7 @@ import { HealthModule } from './modules/health/health.module';
     NewsModule,
     BannersModule,
     UploadsModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}

@@ -4,7 +4,7 @@ Ngày rà soát: 2026-09-06.
 
 ## Phạm vi và cách đọc
 
-- Kiểm kê chi tiết **428 file nguồn/cấu hình/tài liệu** có thể bảo trì.
+- Kiểm kê chi tiết **438 file nguồn/cấu hình/tài liệu** có thể bảo trì.
 - Không đọc hoặc ghi lại giá trị trong các file `.env`; chỉ đánh giá vai trò để tránh lộ secret.
 - Không liệt kê từng file của `node_modules`, `apps/web/.next`, `apps/api/dist*`, Prisma Client generated và dữ liệu `.local/uploads`. Đây là dependency/build/runtime artifacts; xem mục “Artifact sinh tự động”.
 - “Kết nối” mô tả dependency/consumer chính. “Ảnh hưởng product” mô tả hậu quả nếu file sai, đổi hoặc bị thiếu.
@@ -158,6 +158,11 @@ pnpm workspace -> shared UI + shared TS/ESLint config
 | `apps/api/src/modules/categories/categories.service.ts` | Business/infrastructure service categories | Prisma/storage/security và controller gọi vào | Chứa logic chính, tác động trực tiếp dữ liệu/tính năng |
 | `apps/api/src/modules/categories/category-tree.ts` | Mã/cấu hình hỗ trợ theo tên và vị trí file | Thành phần lân cận trong domain categories | Ảnh hưởng gián tiếp tới khả năng build, vận hành hoặc UX |
 | `apps/api/src/modules/categories/tests/categories.spec.ts` | Kiểm thử categories | Module/route/helper tương ứng và test runner | Không chạy production; ngăn hồi quy product |
+| `apps/api/src/modules/dashboard/dashboard.controller.ts` | HTTP controller dashboard | Guard ADMIN, DashboardService và OpenAPI | Cung cấp số liệu tổng quan cho khu vực quản trị |
+| `apps/api/src/modules/dashboard/dashboard.module.ts` | Nest module dashboard | PrismaModule, SecurityModule và UsersModule | Ghép endpoint tổng quan vào runtime API |
+| `apps/api/src/modules/dashboard/dashboard.response.ts` | Hợp đồng response dashboard | Swagger/OpenAPI và frontend schema | Giữ cấu trúc số liệu dashboard ổn định |
+| `apps/api/src/modules/dashboard/dashboard.service.ts` | Tổng hợp số liệu quản trị | Prisma counts trên product/category/brand/news/banner | Quyết định số liệu và cảnh báo hiển thị cho admin |
+| `apps/api/src/modules/dashboard/tests/dashboard.service.spec.ts` | Unit test dashboard | DashboardService và Prisma mock | Ngăn hồi quy logic ghép số liệu tổng quan |
 | `apps/api/src/modules/health/.gitkeep` | Giữ thư mục rỗng trong Git | Không có dependency runtime | Không ảnh hưởng chức năng; chỉ giữ cấu trúc repo |
 | `apps/api/src/modules/health/health.controller.ts` | HTTP controller domain health | DTO/guard/service và Nest routing | Định nghĩa API mà web/khách hàng sử dụng |
 | `apps/api/src/modules/health/health.module.ts` | Nest module health | Ghép controller/service/provider/module phụ thuộc | Quyết định wiring và khả năng khởi động tính năng |
@@ -373,6 +378,11 @@ pnpm workspace -> shared UI + shared TS/ESLint config
 | `apps/web/src/features/categories/client.ts` | Public barrel/entry point | Re-export API được phép trong package/feature | Kiểm soát boundary và coupling giữa các phần |
 | `apps/web/src/features/categories/public-categories.server.ts` | Gateway server-side categories | Next Server Components và Nest public API | Ảnh hưởng SSR, SEO và dữ liệu storefront |
 | `apps/web/src/features/categories/server.ts` | Public barrel/entry point | Re-export API được phép trong package/feature | Kiểm soát boundary và coupling giữa các phần |
+| `apps/web/src/features/dashboard/admin-dashboard.api.client.ts` | Client gọi API dashboard | Browser HTTP client và `/admin/dashboard` | Nối màn hình tổng quan với số liệu backend |
+| `apps/web/src/features/dashboard/admin-dashboard.client.tsx` | Giao diện dashboard quản trị | TanStack Query, API dashboard và các route admin | Hiển thị KPI, cảnh báo và lối tắt thao tác |
+| `apps/web/src/features/dashboard/admin-dashboard.schema.ts` | Schema dữ liệu dashboard | Zod, API client và component dashboard | Chặn payload sai trước khi render số liệu |
+| `apps/web/src/features/dashboard/admin-dashboard.spec.ts` | Kiểm thử schema dashboard | Vitest và Zod schema | Ngăn số liệu âm hoặc response sai cấu trúc |
+| `apps/web/src/features/dashboard/client.ts` | Public entry point dashboard | Admin page và dashboard client component | Giữ boundary import nhất quán cho App Router |
 | `apps/web/src/features/news/admin-news.api.client.ts` | Client gọi API admin news | browser HTTP client và Nest endpoint | Nối thao tác quản trị với backend |
 | `apps/web/src/features/news/admin-news.queries.client.ts` | TanStack Query hooks news | API client, cache và UI form/table | Ảnh hưởng loading/cache/refetch của admin |
 | `apps/web/src/features/news/admin-news.schemas.ts` | Zod/form schema news | React Hook Form và API payload | Validation tức thời, giảm request lỗi |

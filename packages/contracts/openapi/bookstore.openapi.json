@@ -569,6 +569,76 @@
         "required": ["sku", "name", "slug"],
         "type": "object"
       },
+      "DashboardNewsDto": {
+        "properties": {
+          "archived": {
+            "type": "number"
+          },
+          "draft": {
+            "type": "number"
+          },
+          "published": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          }
+        },
+        "required": ["total", "published", "draft", "archived"],
+        "type": "object"
+      },
+      "DashboardProductsDto": {
+        "properties": {
+          "active": {
+            "type": "number"
+          },
+          "missingImages": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          }
+        },
+        "required": ["total", "active", "missingImages"],
+        "type": "object"
+      },
+      "DashboardResponseDto": {
+        "properties": {
+          "banners": {
+            "$ref": "#/components/schemas/DashboardSectionDto"
+          },
+          "brands": {
+            "$ref": "#/components/schemas/DashboardSectionDto"
+          },
+          "categories": {
+            "$ref": "#/components/schemas/DashboardSectionDto"
+          },
+          "generatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "news": {
+            "$ref": "#/components/schemas/DashboardNewsDto"
+          },
+          "products": {
+            "$ref": "#/components/schemas/DashboardProductsDto"
+          }
+        },
+        "required": ["products", "categories", "brands", "news", "banners", "generatedAt"],
+        "type": "object"
+      },
+      "DashboardSectionDto": {
+        "properties": {
+          "active": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          }
+        },
+        "required": ["total", "active"],
+        "type": "object"
+      },
       "HealthResponseDto": {
         "properties": {
           "status": {
@@ -1899,6 +1969,30 @@
           }
         ],
         "tags": ["admin-categories"]
+      }
+    },
+    "/admin/dashboard": {
+      "get": {
+        "operationId": "DashboardController_summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": ["admin-dashboard"]
       }
     },
     "/admin/news": {
