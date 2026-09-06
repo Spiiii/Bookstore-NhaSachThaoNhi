@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve } from 'node:path';
+import { CloudinaryStorageAdapter } from '../../src/infrastructure/storage/adapters/cloudinary-storage.adapter';
 import { LocalStorageAdapter } from '../../src/infrastructure/storage/adapters/local-storage.adapter';
 import {
   STORAGE_ADAPTER,
@@ -44,6 +45,36 @@ describe('Local storage infrastructure', () => {
     } finally {
       await context.close();
     }
+  });
+
+  it('selects Cloudinary only when explicitly configured', async () => {
+    const context = await Test.createTestingModule({ imports: [StorageModule] })
+      .overrideProvider(ConfigService)
+      .useValue(
+        new ConfigService({
+          STORAGE_PROVIDER: 'cloudinary',
+          CLOUDINARY_CLOUD_NAME: 'fixture-cloud',
+          CLOUDINARY_API_KEY: 'fixture-key',
+          CLOUDINARY_API_SECRET: 'fixture-secret',
+          CLOUDINARY_FOLDER: 'fixture/assets',
+          UPLOAD_MAX_BYTES: 1024,
+        }),
+      )
+      .compile();
+    try {
+      expect(context.get<StorageAdapter>(STORAGE_ADAPTER)).toBeInstanceOf(CloudinaryStorageAdapter);
+    } finally {
+      await context.close();
+    }
+  });
+
+  it('fails closed for an unknown storage provider', async () => {
+    await expect(
+      Test.createTestingModule({ imports: [StorageModule] })
+        .overrideProvider(ConfigService)
+        .useValue(new ConfigService({ STORAGE_PROVIDER: 'unknown' }))
+        .compile(),
+    ).rejects.toThrow(/STORAGE_PROVIDER/);
   });
 
   it('round-trips binary bytes using an opaque key and reports the byte size', async () => {

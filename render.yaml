@@ -1,0 +1,78 @@
+services:
+  - type: web
+    name: nha-sach-thao-nhi-api
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: master
+    dockerContext: .
+    dockerfilePath: ./apps/api/Dockerfile
+    healthCheckPath: /health/ready
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_ISSUER
+        value: bookstore-api
+      - key: JWT_ACCESS_AUDIENCE
+        value: bookstore-web-access
+      - key: JWT_REFRESH_AUDIENCE
+        value: bookstore-web-refresh
+      - key: AUTH_ALLOWED_ORIGINS
+        sync: false
+      - key: AUTH_COOKIE_PATH
+        value: /auth
+      - key: AUTH_COOKIE_SAME_SITE
+        value: none
+      - key: TRUSTED_PROXIES
+        value: loopback,linklocal,uniquelocal
+      - key: SWAGGER_ENABLED
+        value: 'false'
+      - key: PASSWORD_ARGON2_MEMORY_COST
+        value: '65536'
+      - key: PASSWORD_ARGON2_TIME_COST
+        value: '3'
+      - key: PASSWORD_ARGON2_PARALLELISM
+        value: '1'
+      - key: STORAGE_PROVIDER
+        value: cloudinary
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_FOLDER
+        value: nha-sach-thao-nhi
+      - key: UPLOAD_MAX_BYTES
+        value: '5242880'
+      - key: UPLOAD_MAX_PIXELS
+        value: '16000000'
+      - key: UPLOAD_MAX_CONCURRENT
+        value: '2'
+      - key: BANNER_PLACEMENTS
+        value: home-hero
+
+  - type: web
+    name: nha-sach-thao-nhi-web
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: master
+    dockerContext: .
+    dockerfilePath: ./apps/web/Dockerfile
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE_URL
+        sync: false
+      - key: API_BASE_URL
+        sync: false
+      - key: SITE_URL
+        sync: false
+      - key: ZALO_URL
+        value: ''
