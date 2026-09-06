@@ -12,7 +12,7 @@ test.describe('session replacement propagation', () => {
       await loginAsAdmin(oldProducts);
       const oldNews = await oldDevice.newPage();
       await oldNews.goto('/admin/news');
-      await expect(oldNews.getByText('Quản trị Nhà sách')).toBeVisible();
+      await expect(oldNews.getByText('Quản trị Nhà Sách Thảo Nhi Long Giao')).toBeVisible();
 
       const replacement = await newDevice.newPage();
       await loginAsAdmin(replacement);
@@ -20,7 +20,7 @@ test.describe('session replacement propagation', () => {
       await Promise.all([oldProducts.reload(), oldNews.reload()]);
       await expect(oldProducts).toHaveURL(/\/login\?reason=(?:session-ended|signed-out)/);
       await expect(oldNews).toHaveURL(/\/login\?reason=(?:session-ended|signed-out)/);
-      await expect(replacement.getByText('Quản trị Nhà sách')).toBeVisible();
+      await expect(replacement.getByText('Quản trị Nhà Sách Thảo Nhi Long Giao')).toBeVisible();
     } finally {
       await oldDevice.close();
       await newDevice.close();

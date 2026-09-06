@@ -16,8 +16,8 @@ test.describe('cross-tab refresh coordination', () => {
       const first = await context.newPage();
       const second = await context.newPage();
       await Promise.all([first.goto('/admin/products'), second.goto('/admin/news')]);
-      await expect(first.getByText('Quản trị Nhà sách')).toBeVisible();
-      await expect(second.getByText('Quản trị Nhà sách')).toBeVisible();
+      await expect(first.getByText('Quản trị Nhà Sách Thảo Nhi Long Giao')).toBeVisible();
+      await expect(second.getByText('Quản trị Nhà Sách Thảo Nhi Long Giao')).toBeVisible();
       expect(refreshRequests).toBe(1);
       await original.goto('/admin/banners');
       await expect(original).toHaveURL(/\/admin\/banners$/);

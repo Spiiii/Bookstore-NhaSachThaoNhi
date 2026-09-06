@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useAuth } from '@/features/auth/client';
 import { AdminNavigation } from '@/components/navigation/admin-navigation.client';
+import { siteConfig } from '@/config/site';
 
 function loginHref(reason: string | null): string {
   return reason ? `/login?reason=${encodeURIComponent(reason)}` : '/login';
@@ -63,7 +64,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <a href="#admin-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2">Đi đến nội dung quản trị</a>
       <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-4 py-4 sm:px-6">
-          <div><Link href="/admin" className="text-lg font-black text-stone-900 no-underline">Quản trị Nhà sách</Link><p className="text-xs text-stone-500">{auth.profile.displayName} · {auth.profile.email}</p></div>
+          <div><Link href="/admin" className="text-lg font-black text-stone-900 no-underline">Quản trị {siteConfig.name}</Link><p className="text-xs text-stone-500">{auth.profile.displayName} · {auth.profile.email}</p></div>
           <div className="flex items-center gap-3"><Link href="/" target="_blank" rel="noopener noreferrer" className="hidden rounded-xl border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 no-underline sm:inline-flex">Xem website</Link><button type="button" onClick={() => void signOut()} disabled={loggingOut} className="rounded-xl bg-stone-900 px-4 py-2 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-60">{loggingOut ? 'Đang đăng xuất…' : 'Đăng xuất'}</button></div>
         </div>
       </header>

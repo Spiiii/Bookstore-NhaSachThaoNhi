@@ -41,7 +41,7 @@ export default async function HomePage() {
         {products.items.length ? <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{products.items.slice(0, 6).map((product) => <ProductCard key={product.id} product={product} />)}</div> : <p className="rounded-2xl bg-white p-8 text-stone-600">Sản phẩm đang được cập nhật.</p>}
       </section>
       <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="mb-7 flex items-end justify-between gap-4"><div><p className="text-sm font-bold uppercase tracking-widest text-orange-700">Góc nhà sách</p><h2 className="mt-2 text-3xl font-black">Tin mới</h2></div><Link href="/news" className="font-semibold text-orange-700">Xem tất cả</Link></div>
+        <div className="mb-7 flex items-end justify-between gap-4"><div><p className="text-sm font-bold uppercase tracking-widest text-orange-700">Góc Thảo Nhi</p><h2 className="mt-2 text-3xl font-black">Tin mới</h2></div><Link href="/news" className="font-semibold text-orange-700">Xem tất cả</Link></div>
         {news.items.length ? <div className="grid gap-6 md:grid-cols-3">{news.items.slice(0, 3).map((item) => <NewsCard key={item.id} item={item} />)}</div> : <p className="rounded-2xl bg-white p-8 text-stone-600">Chưa có bài viết mới.</p>}
       </section>
     </>

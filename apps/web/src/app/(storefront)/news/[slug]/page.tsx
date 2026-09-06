@@ -16,7 +16,7 @@ export default async function NewsPage({ params }: Props) {
   const item = await getPublicNews((await params).slug);
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <p className="text-sm font-bold uppercase tracking-widest text-orange-700">Góc nhà sách</p>
+      <p className="text-sm font-bold uppercase tracking-widest text-orange-700">Góc Thảo Nhi</p>
       <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{item.title}</h1>
       <time className="mt-4 block text-sm text-stone-500" dateTime={item.publishedAt}>
         {new Date(item.publishedAt).toLocaleDateString('vi-VN', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'Asia/Ho_Chi_Minh' })}
@@ -27,4 +27,3 @@ export default async function NewsPage({ params }: Props) {
     </article>
   );
 }
-

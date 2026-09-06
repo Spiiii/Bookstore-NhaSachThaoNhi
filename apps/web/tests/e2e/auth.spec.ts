@@ -23,7 +23,7 @@ test.describe('singleton admin authentication', () => {
       await loginAsAdmin(secondPage);
       await firstPage.goto('/admin/products');
       await expect(firstPage).toHaveURL(/\/login\?reason=(?:session-ended|signed-out)/);
-      await expect(secondPage.getByText('Quản trị Nhà sách')).toBeVisible();
+      await expect(secondPage.getByText('Quản trị Nhà Sách Thảo Nhi Long Giao')).toBeVisible();
     } finally {
       await first.close();
       await second.close();

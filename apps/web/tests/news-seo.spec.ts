@@ -59,7 +59,7 @@ describe('News SEO and visibility', () => {
     vi.stubEnv('SITE_URL', 'https://books.test');
     const home = pageMetadata({ path: '/', absoluteTitle: true });
     const filtered = pageMetadata({ path: '/products', title: 'Sản phẩm', noIndex: true });
-    expect(home.title).toEqual({ absolute: 'Nhà sách' });
+    expect(home.title).toEqual({ absolute: 'Nhà Sách Thảo Nhi Long Giao' });
     expect(filtered.robots).toEqual({ index: false, follow: false });
     expect(filtered.alternates?.canonical).toBe('https://books.test/products');
     vi.unstubAllEnvs();

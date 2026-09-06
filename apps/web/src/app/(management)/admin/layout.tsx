@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { AdminShell } from '@/components/layout/admin-shell.client';
 import { AppProviders } from '@/providers';
+import { siteConfig } from '@/config/site';
 
 export const metadata: Metadata = {
-  title: { default: 'Quản trị', template: '%s | Quản trị' },
+  title: { default: `Quản trị ${siteConfig.name}`, template: `%s | Quản trị ${siteConfig.name}` },
   robots: { index: false, follow: false, noarchive: true, noimageindex: true },
 };
 

@@ -13,7 +13,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const noIndex = Boolean(search.q || search.categoryId || search.brandId || (search.page && search.page !== '1'));
   return pageMetadata({
     title: 'Sản phẩm',
-    description: 'Khám phá sản phẩm đang được giới thiệu tại nhà sách.',
+    description: 'Khám phá sách và sản phẩm đang được giới thiệu tại Nhà Sách Thảo Nhi Long Giao.',
     path: '/products',
     noIndex,
   });

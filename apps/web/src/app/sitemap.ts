@@ -13,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: origin },
     { url: origin + '/products' },
     { url: origin + '/news' },
+    { url: origin + '/contact' },
   ];
   const seen = new Set<string>();
 

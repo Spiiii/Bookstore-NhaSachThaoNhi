@@ -4,7 +4,7 @@ Ngày rà soát: 2026-09-06.
 
 ## Phạm vi và cách đọc
 
-- Kiểm kê chi tiết **438 file nguồn/cấu hình/tài liệu** có thể bảo trì.
+- Kiểm kê chi tiết **439 file nguồn/cấu hình/tài liệu** có thể bảo trì.
 - Không đọc hoặc ghi lại giá trị trong các file `.env`; chỉ đánh giá vai trò để tránh lộ secret.
 - Không liệt kê từng file của `node_modules`, `apps/web/.next`, `apps/api/dist*`, Prisma Client generated và dữ liệu `.local/uploads`. Đây là dependency/build/runtime artifacts; xem mục “Artifact sinh tự động”.
 - “Kết nối” mô tả dependency/consumer chính. “Ảnh hưởng product” mô tả hậu quả nếu file sai, đổi hoặc bị thiếu.
@@ -296,6 +296,7 @@ pnpm workspace -> shared UI + shared TS/ESLint config
 | `apps/web/src/app/(management)/admin/products/page.tsx` | Trang route Next.js | App Router và feature tương ứng | Trực tiếp tạo màn hình/luồng người dùng |
 | `apps/web/src/app/(management)/admin/security/password/page.tsx` | Trang route Next.js | App Router và feature tương ứng | Trực tiếp tạo màn hình/luồng người dùng |
 | `apps/web/src/app/(storefront)/layout.tsx` | Layout route Next.js | App Router, navigation/providers và các page con | Quyết định khung giao diện và phạm vi auth |
+| `apps/web/src/app/(storefront)/contact/page.tsx` | Trang thông tin liên hệ cửa hàng | Site config, Google Maps, liên kết điện thoại và email | Giúp khách tìm đường và liên hệ trực tiếp với cửa hàng |
 | `apps/web/src/app/(storefront)/news/.gitkeep` | Giữ thư mục rỗng trong Git | Không có dependency runtime | Không ảnh hưởng chức năng; chỉ giữ cấu trúc repo |
 | `apps/web/src/app/(storefront)/news/[slug]/page.tsx` | Trang route Next.js | App Router và feature tương ứng | Trực tiếp tạo màn hình/luồng người dùng |
 | `apps/web/src/app/(storefront)/news/page.tsx` | Trang route Next.js | App Router và feature tương ứng | Trực tiếp tạo màn hình/luồng người dùng |

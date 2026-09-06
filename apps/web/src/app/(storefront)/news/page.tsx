@@ -9,7 +9,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const origins = newsOrigins();
   return pageMetadata({
     title: 'Tin tức',
-    description: 'Tin tức và câu chuyện mới từ nhà sách.',
+    description: 'Tin tức và câu chuyện mới từ Nhà Sách Thảo Nhi Long Giao.',
     path: '/news',
     noIndex: Boolean(page && page !== '1'),
     siteBase: origins.site,
@@ -23,7 +23,7 @@ export default async function NewsList({ searchParams }: { searchParams: Promise
   const data = await listPublicNews(page);
   return (
     <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <p className="text-sm font-bold uppercase tracking-widest text-orange-700">Góc nhà sách</p>
+      <p className="text-sm font-bold uppercase tracking-widest text-orange-700">Góc Thảo Nhi</p>
       <h1 className="mt-2 text-4xl font-black">Tin tức</h1>
       {data.items.length ? <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{data.items.map((item) => <NewsCard key={item.id} item={item} />)}</div> : <p className="mt-8 rounded-2xl bg-white p-10 text-stone-600">Chưa có bài viết được xuất bản.</p>}
       <nav aria-label="Phân trang tin tức" className="mt-10 flex justify-center gap-3">
