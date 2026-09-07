@@ -1,0 +1,65 @@
+name: Set up initial admin
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: production-admin-setup
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 24.18.0
+  PNPM_VERSION: 10.34.5
+
+jobs:
+  setup:
+    name: Create initial admin if absent
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm --filter @bookstore/api exec prisma generate
+      - name: Build isolated admin operation
+        run: pnpm --filter @bookstore/api build:operations
+      - name: Validate required secrets
+        shell: bash
+        env:
+          SETUP_DATABASE_URL: ${{ secrets.SETUP_DATABASE_URL }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_DISPLAY_NAME: ${{ secrets.ADMIN_DISPLAY_NAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+        run: |
+          test -n "$SETUP_DATABASE_URL" || { echo "SETUP_DATABASE_URL secret is missing"; exit 1; }
+          test -n "$ADMIN_EMAIL" || { echo "ADMIN_EMAIL secret is missing"; exit 1; }
+          test -n "$ADMIN_DISPLAY_NAME" || { echo "ADMIN_DISPLAY_NAME secret is missing"; exit 1; }
+          test -n "$ADMIN_PASSWORD" || { echo "ADMIN_PASSWORD secret is missing"; exit 1; }
+      - name: Create initial admin
+        working-directory: apps/api
+        env:
+          SETUP_DATABASE_URL: ${{ secrets.SETUP_DATABASE_URL }}
+          SETUP_DATABASE_ROLE: bookstore_setup
+          OPERATOR_ID: github-actions
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_DISPLAY_NAME: ${{ secrets.ADMIN_DISPLAY_NAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+        shell: bash
+        run: |
+          node -e 'process.stdout.write(JSON.stringify({email:process.env.ADMIN_EMAIL,displayName:process.env.ADMIN_DISPLAY_NAME,password:process.env.ADMIN_PASSWORD}))' |
+            node dist-operations/operations/setup-admin.js
