@@ -21,6 +21,7 @@ export function marketplaceUrl(marketplace: Marketplace, value: string): string 
     );
   }
   // Exact official hosts and product/share paths only. Never fetch user URLs or follow redirects here.
+  const shortSharePath = /^\/[A-Za-z0-9_-]+\/?$/;
   const valid =
     marketplace === Marketplace.SHOPEE
       ? (['shopee.vn', 'www.shopee.vn'].includes(url.hostname) &&
@@ -28,11 +29,14 @@ export function marketplaceUrl(marketplace: Marketplace, value: string): string 
             /-i\.[0-9]+\.[0-9]+\/?$/.test(url.pathname))) ||
         (url.hostname === 'shopee.vn' &&
           /^\/universal-link\/product\/[0-9]+\/[0-9]+\/?$/.test(url.pathname)) ||
-        (url.hostname === 's.shopee.vn' && /^\/[A-Za-z0-9]+$/.test(url.pathname))
+        (['s.shopee.vn', 'vn.shp.ee'].includes(url.hostname) && shortSharePath.test(url.pathname))
       : (['www.tiktok.com', 'tiktok.com', 'shop.tiktok.com'].includes(url.hostname) &&
-          /^\/(?:view\/)?product\/[0-9]+\/?$/.test(url.pathname)) ||
-        (url.hostname === 'vt.tiktok.com' && /^\/[A-Za-z0-9]+\/?$/.test(url.pathname));
+          (/^\/(?:view\/)?product\/[0-9]+\/?$/.test(url.pathname) ||
+            /^\/t\/[A-Za-z0-9_-]+\/?$/.test(url.pathname))) ||
+        (url.hostname === 'vt.tiktok.com' && shortSharePath.test(url.pathname));
   if (!valid)
-    throw new BadRequestException('Use a product or share link for the selected marketplace.');
+    throw new BadRequestException(
+      'Use an official Shopee or TikTok Shop product/share link for the selected marketplace.',
+    );
   return url.toString();
 }

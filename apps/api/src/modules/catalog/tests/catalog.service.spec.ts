@@ -234,4 +234,24 @@ describe('Catalog public mapping and URL policy', () => {
       marketplaceUrl(Marketplace.TIKTOK_SHOP, 'https://www.tiktok.com/view/product/123'),
     ).toContain('tiktok.com');
   });
+  it.each([
+    [Marketplace.SHOPEE, 'https://s.shopee.vn/8AJxYz_1'],
+    [Marketplace.SHOPEE, 'https://vn.shp.ee/AbC-123'],
+    [Marketplace.TIKTOK_SHOP, 'https://vt.tiktok.com/ZSk_Ab-1/'],
+    [Marketplace.TIKTOK_SHOP, 'https://www.tiktok.com/t/ZSk_Ab-1/'],
+    [
+      Marketplace.TIKTOK_SHOP,
+      'https://shop.tiktok.com/view/product/1729440300179688247?region=VN&locale=vi-VN',
+    ],
+  ])('accepts current official share URL for %s', (marketplace, url) => {
+    expect(marketplaceUrl(marketplace, url)).toBe(url);
+  });
+  it.each([
+    [Marketplace.SHOPEE, 'https://vn.shp.ee/'],
+    [Marketplace.SHOPEE, 'https://vn.shp.ee.evil.test/AbC123'],
+    [Marketplace.TIKTOK_SHOP, 'https://www.tiktok.com/t/'],
+    [Marketplace.TIKTOK_SHOP, 'https://www.tiktok.com/@seller/video/123'],
+  ])('rejects non-product or lookalike share URL for %s', (marketplace, url) => {
+    expect(() => marketplaceUrl(marketplace, url)).toThrow();
+  });
 });
