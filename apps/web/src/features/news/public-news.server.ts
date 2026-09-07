@@ -3,6 +3,7 @@ import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
 import type { components } from '@bookstore/contracts';
+import { getServerApiTimeoutMs } from '@/lib/http/server-client';
 
 type NewsProjection = Pick<
   components['schemas']['NewsResponseDto'],
@@ -43,7 +44,7 @@ export function newsOrigins() {
 async function request(path: string) {
   const response = await fetch(newsOrigins().api + path, {
     cache: 'no-store',
-    signal: AbortSignal.timeout(10000),
+    signal: AbortSignal.timeout(getServerApiTimeoutMs()),
     redirect: 'error',
   });
   if (response.status === 404) notFound();
