@@ -51,13 +51,11 @@ export function createTransport({
 }
 
 export function getBrowserApiBaseUrl(): string {
-  return normalizeApiBaseUrl(
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? '',
-    'NEXT_PUBLIC_API_BASE_URL',
-  );
+  const raw = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() ?? '';
+  if (/^\/(?!\/)[A-Za-z0-9/_-]*$/.test(raw)) return raw.replace(/\/+$/, '');
+  return normalizeApiBaseUrl(raw, 'NEXT_PUBLIC_API_BASE_URL');
 }
 
 export function createBrowserTransport(baseURL = getBrowserApiBaseUrl()): AxiosInstance {
   return createTransport({ baseURL, withCredentials: true });
 }
-

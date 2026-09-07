@@ -25,7 +25,9 @@ COPY apps/web apps/web
 COPY packages packages
 
 ARG NEXT_PUBLIC_API_BASE_URL
+ARG API_BASE_URL
 ENV NEXT_PUBLIC_API_BASE_URL="$NEXT_PUBLIC_API_BASE_URL"
+ENV API_BASE_URL="$API_BASE_URL"
 
 RUN pnpm --filter @bookstore/web build
 # The legacy deploy projection inspects the shared workspace lockfile, including

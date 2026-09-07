@@ -1,11 +1,7 @@
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
-import {
-  ApiClientError,
-  isSessionInvalidationError,
-  normalizeApiError,
-} from './normalize-error';
-import { createTransport, normalizeApiBaseUrl } from './transport';
+import { ApiClientError, isSessionInvalidationError, normalizeApiError } from './normalize-error';
+import { createTransport, getBrowserApiBaseUrl, normalizeApiBaseUrl } from './transport';
 
 describe('HTTP transport', () => {
   it('rejects unsafe base URLs', () => {
@@ -15,12 +11,22 @@ describe('HTTP transport', () => {
 
   it('prevents absolute request URLs from replacing the configured API origin', async () => {
     const adapter = vi.fn().mockResolvedValue({
-      data: {}, status: 200, statusText: 'OK', headers: {}, config: {},
+      data: {},
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {},
     });
     const client = createTransport({ baseURL: 'https://api.example.com', timeoutMs: 1_000 });
     client.defaults.adapter = adapter;
     await client.get('https://untrusted.example/path');
     expect(client.defaults.allowAbsoluteUrls).toBe(false);
+  });
+
+  it('accepts a same-origin browser API path', () => {
+    vi.stubEnv('NEXT_PUBLIC_API_BASE_URL', '/api');
+    expect(getBrowserApiBaseUrl()).toBe('/api');
+    vi.unstubAllEnvs();
   });
 });
 
@@ -41,7 +47,9 @@ describe('normalizeApiError', () => {
   it('uses a stable code for network errors without exposing request details', () => {
     const source = new axios.AxiosError('getaddrinfo ENOTFOUND secret-host');
     expect(normalizeApiError(source)).toMatchObject({
-      message: 'Unable to reach the API.', status: null, code: 'NETWORK_ERROR',
+      message: 'Unable to reach the API.',
+      status: null,
+      code: 'NETWORK_ERROR',
     });
   });
 
